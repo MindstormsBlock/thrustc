@@ -1,0 +1,20 @@
+package thrust.test;
+
+import thrust.lang.memory;
+
+class Test {
+	String text;
+
+	public Test() {
+		this.text = "Uninitialized";
+	}
+
+	public Test(String text) {
+		this.text = text;
+	}
+}
+
+int32 main(int count, char* value) {
+	Test test = new Test();
+	ptr mem = salloc(5);
+}
