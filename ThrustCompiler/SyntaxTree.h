@@ -1,5 +1,7 @@
 #pragma once
 
+#if 0
+
 #include "app.h"
 
 namespace ThrustCompiler {
@@ -12,7 +14,6 @@ namespace ThrustCompiler {
 	class NumberST : public ExpressionST {
 	public:
 		NumberST(float64 value);
-		NumberST() = delete;
 
 	private:
 		float64 value;
@@ -21,7 +22,6 @@ namespace ThrustCompiler {
 	class VariableST : public ExpressionST {
 	public:
 		VariableST(const String16& name);
-		VariableST() = delete;
 
 	private:
 		String16 name;
@@ -30,7 +30,6 @@ namespace ThrustCompiler {
 	class BinaryExpressionST : public ExpressionST {
 	public:
 		BinaryExpressionST(char16 op, ExpressionST* LHS, ExpressionST* RHS);
-		BinaryExpressionST() = delete;
 
 		~BinaryExpressionST();
 
@@ -41,11 +40,11 @@ namespace ThrustCompiler {
 		ExpressionST* RHS;
 	};
 
-	class CallExpresionST : public ExpressionST {
+	class CallExpressionST : public ExpressionST {
 	public:
-		CallExpresionST(const String16& callee, std::vector<ExpressionST*>&& argumentList);
+		CallExpressionST(const String16& callee, std::vector<ExpressionST*>&& argumentList);
 
-		~CallExpresionST();
+		~CallExpressionST();
 
 	private:
 		String16 callee;
@@ -73,3 +72,5 @@ namespace ThrustCompiler {
 		ExpressionST* body;
 	};
 }
+
+#endif

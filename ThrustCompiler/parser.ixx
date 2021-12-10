@@ -1,18 +1,16 @@
-#include "parser.h"
+#include "app.h"
 
-#if 0
+export module parser;
+
+import Token;
+import Status;
+import SyntaxTree;
 
 namespace ThrustCompiler {
 
-	//TokenMap tokenList;
-	
-	/*std::wostream operator<<(std::wostream wos, TokenStringList tsl) {
-
-	}*/
-
 	std::vector<Token> tokenList;
 
-	static Token getToken(String tokenString) {
+	Token getToken(String tokenString) {
 		charp tokenChar = tokenString[0];
 
 		if (tokenString == strVal("var")) {
@@ -35,7 +33,7 @@ namespace ThrustCompiler {
 		}
 	}
 
-	Status tokenize(const charp* filePath) noexcept {
+	export Status tokenize(const charp* filePath) noexcept {
 #if _DEBUG
 		if (filePath == nullptr) {
 			serr << strVal("Not enough arguments; filepath missing") << std::endl;
@@ -56,27 +54,17 @@ namespace ThrustCompiler {
 				fileStream >> tokenString;
 
 				tokenList.push_back(std::move(getToken(tokenString)));
-
-				//std::wcout << tokenString << std::endl;
-				//tokenList.push_back(std::move(tokenString));
 			}
-
-			/*for (sizep i = 0; i < tokenList.size(); i++) {
-				std::wcout << tokenList[i] << ", ";
-			}
-			std::wcout << std::endl;*/
 		}
 		catch (std::exception e) {
 			sout << "Error while tokenizing: " << e.what() << std::endl;
 			return Status::ERROR_TOKENIZER;
 		}
 		catch (...) {
-			sout << "Error while tokenizing" << std::endl;
+			sout << "Unknown error while tokenizing" << std::endl;
 			return Status::ERROR_TOKENIZER;
 		}
 
 		return Status::OK;
 	}
 }
-
-#endif

@@ -1,5 +1,7 @@
 #pragma once
 
+#if 0
+
 #include "app.h"
 
 #include <string>
@@ -12,3 +14,5 @@ namespace ThrustCompiler {
 
 	Status preprocess(std::wstring& fileContents);
 }
+
+#endif

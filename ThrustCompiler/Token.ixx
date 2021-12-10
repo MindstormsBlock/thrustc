@@ -1,15 +1,10 @@
-#pragma once
+#include "app.h"
 
-/*#include "app.h"
+export module Token;
 
-#include <vector>
+namespace ThrustCompiler {
 
-#include <utility>
-#include <algorithm>*/
-
-/*namespace ThrustCompiler {
-
-	template<typename K, typename V>
+	/*export template<typename K, typename V>
 	class TokenMap {
 	public:
 		using Value = std::pair<K, V>;
@@ -50,19 +45,19 @@
 
 	private:
 		Container container;
-	};
+	};*/
 
-	enum class Token {
+	export enum class Token {
 		TNONE = 0,
 
 		TVAR,
 
 		TPRINT,
-		
+
 		TASSIGN,
 
 		TIDENTIFIER,
 
 		TF64VAL
 	};
-}*/
+}

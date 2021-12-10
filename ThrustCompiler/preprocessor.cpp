@@ -1,3 +1,5 @@
+#if 0
+
 #include "preprocessor.h"
 
 #include <iostream>
@@ -55,3 +57,5 @@ namespace ThrustCompiler {
 		return Status::OK;
 	}
 }
+
+#endif

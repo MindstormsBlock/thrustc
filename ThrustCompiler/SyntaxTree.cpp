@@ -1,3 +1,5 @@
+#if 0
+
 #include "SyntaxTree.h"
 
 namespace ThrustCompiler {
@@ -18,10 +20,10 @@ namespace ThrustCompiler {
 		delete RHS;
 	}
 
-	CallExpresionST::CallExpresionST(const String16& callee, std::vector<ExpressionST*>&& argumentList)
+	CallExpressionST::CallExpressionST(const String16& callee, std::vector<ExpressionST*>&& argumentList)
 		: callee(callee), argumentList(std::move(argumentList)) {}
 
-	CallExpresionST::~CallExpresionST() {
+	CallExpressionST::~CallExpressionST() {
 		for (sizep i = 0; i < argumentList.size(); i++) {
 			delete argumentList[i];
 		}
@@ -45,3 +47,5 @@ namespace ThrustCompiler {
 		delete body;
 	}
 }
+
+#endif

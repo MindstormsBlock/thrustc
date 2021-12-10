@@ -1,5 +1,7 @@
 #pragma once
 
+#if 0
+
 #include "app.h"
 
 #include "Token.h"
@@ -11,3 +13,5 @@ namespace ThrustCompiler {
 
 	Status tokenize(const charp* filePath) noexcept;
 }
+
+#endif
