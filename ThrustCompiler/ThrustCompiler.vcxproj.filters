@@ -41,6 +41,12 @@
     <ClCompile Include="parser.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tokenizer.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Value.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tests\improper.thrust">

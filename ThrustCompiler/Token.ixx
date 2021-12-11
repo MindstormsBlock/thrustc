@@ -1,13 +1,56 @@
 #include "app.h"
 
+#include <algorithm>
+
 export module Token;
 
 namespace ThrustCompiler {
 
-	/*export template<typename K, typename V>
+	export enum class Token {
+		TNONE = 0,
+
+		TVAR,
+
+		TPRINT,
+
+		TASSIGN,
+
+		TIDENTIFIER,
+
+		TF64VAL
+	};
+
+	export OStream& operator<<(OStream& os, const Token token) {
+		String s;
+
+		switch (token) {
+		case Token::TNONE:
+			s = strVal("TNONE");
+			break;
+		case Token::TVAR:
+			s = strVal("TVAR");
+			break;
+		case Token::TPRINT:
+			s = strVal("TPRINT");
+			break;
+		case Token::TASSIGN:
+			s = strVal("TASSIGN");
+			break;
+		case Token::TIDENTIFIER:
+			s = strVal("TIDENTIFIER");
+			break;
+		case Token::TF64VAL:
+			s = strVal("TF64VAL");
+			break;
+		}
+
+		return os << s;
+	}
+
+	/*export template<typename V>
 	class TokenMap {
 	public:
-		using Value = std::pair<K, V>;
+		using Value = std::pair<Token, V>;
 		using Container = std::vector<Value>;
 
 		using Iterator = typename Container::const_iterator;
@@ -35,7 +78,6 @@ namespace ThrustCompiler {
 				return pair.first < key;
 				}
 			);
-
 			return iterator != end() && iterator->first == key ? iterator : end();
 		}
 
@@ -46,18 +88,4 @@ namespace ThrustCompiler {
 	private:
 		Container container;
 	};*/
-
-	export enum class Token {
-		TNONE = 0,
-
-		TVAR,
-
-		TPRINT,
-
-		TASSIGN,
-
-		TIDENTIFIER,
-
-		TF64VAL
-	};
 }

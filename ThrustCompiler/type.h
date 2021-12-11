@@ -5,11 +5,13 @@
 #pragma once
 
 //#define USE_STL_MODULES // - Does not suppot syntax highlighting
+#pragma region includes
 
 #ifdef USE_STL_MODULES
 import <string>;
 
 import <vector>;
+import <map>;
 
 import <iostream>;
 import <fstream>;
@@ -19,6 +21,7 @@ import <memory>;
 #include <string>
 
 #include <vector>
+#include <map>
 
 #include <iostream>
 #include <fstream>
@@ -26,7 +29,11 @@ import <memory>;
 #include <memory>
 #endif
 
+#pragma endregion
+
 //Definitions for compatibility
+#pragma region platformDefs
+
 //Definitions for Windows, GNU/Linux, macOS
 #if defined(_WIN32) || defined(__linux__) || defined(__APPLE__)
 #define MODERN_DESKTOP
@@ -36,8 +43,12 @@ import <memory>;
 #endif
 #endif
 
+#pragma endregion
+
 //Type definitions for modern desktop OSes
 //p means "preferred" and is used to get the type most native to a platform, or a general preferred version of a type
+#pragma region modernDesktopTypes
+
 #ifdef MODERN_DESKTOP
 //Integral types
 using uint64 = unsigned long long int;
@@ -63,11 +74,6 @@ using sizep = uint64;
 using sizep = uint32;
 #endif
 
-//Types for main
-//Definitions used by main, and ONLY in main
-#define ARGC int
-#define MAINRET int
-
 //Character types
 using char16 = wchar_t;
 using char8 = char;
@@ -76,14 +82,25 @@ using char8 = char;
 using String8 = std::string;
 using String16 = std::wstring;
 
+//Types for main
+//Definitions used by main, and ONLY in main
+#define ARGC int
+#define MAINRET int
+
 #endif
 
+#pragma endregion
+
 //Gets the preffered UTF type based on platform
+#pragma region unicodeTypes
+
 #ifdef _UNICODE
 //Basic types, for character and byte manipulation
 using charp = char16;
 using String = String16;
+
 using IFStream = std::wifstream;
+using OStream = std::wostream;
 
 //Main and character definitions
 //Definitions used by main, and ONLY in main
@@ -121,10 +138,16 @@ using IFStream = std::ifstream;
 #define serr std::cerr
 #endif
 
-//Pointer types
+#pragma endregion
+
+//Smart pointer types
+#pragma region smartPointerTypes
+
 template<typename T>
 using ptr = std::unique_ptr<T>;
 template<typename T>
 using sptr = std::shared_ptr<T>;
 template<typename T>
 using wptr = std::weak_ptr<T>;
+
+#pragma endregion
