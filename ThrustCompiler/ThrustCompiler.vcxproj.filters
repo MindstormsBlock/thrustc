@@ -18,19 +18,7 @@
     <ClInclude Include="app.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SyntaxTree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Token.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="type.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="preprocessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,19 +26,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="preprocessor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SyntaxTree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="preprocessor.ixx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="parser.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Status.ixx">
@@ -62,12 +38,15 @@
     <ClCompile Include="SyntaxTree.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="parser.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="main.thrust">
+    <None Include="tests\improper.thrust">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="improper.thrust">
+    <None Include="tests\main.thrust">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

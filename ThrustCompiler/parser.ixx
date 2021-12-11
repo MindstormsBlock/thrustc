@@ -3,35 +3,16 @@
 export module parser;
 
 import Token;
-import Status;
 import SyntaxTree;
 
 namespace ThrustCompiler {
 
+	String identifier = strVal("");
+	float64 value = 0.0;
+
 	std::vector<Token> tokenList;
 
-	Token getToken(String tokenString) {
-		charp tokenChar = tokenString[0];
-
-		if (tokenString == strVal("var")) {
-			return Token::TVAR;
-		}
-		else if (tokenString == strVal("print")) {
-			return Token::TPRINT;
-		}
-		else if (tokenString == strVal("=")) {
-			return Token::TASSIGN;
-		}
-		else if (std::isalpha(tokenChar) || tokenChar == charVal('_')) {
-			return Token::TIDENTIFIER;
-		}
-		else if (std::isdigit(tokenChar)) {
-			return Token::TF64VAL;
-		}
-		else {
-			throw std::exception("invalid token");
-		}
-	}
+	static Token getToken(String tokenString);
 
 	export Status tokenize(const charp* filePath) noexcept {
 #if _DEBUG
@@ -41,9 +22,6 @@ namespace ThrustCompiler {
 		}
 #endif
 		Token token = Token::TNONE;
-		String identifier = strVal("");
-		float64 value = 0.0;
-		bool acceptingVal = false;
 
 		try {
 			IFStream fileStream(filePath);
@@ -66,5 +44,33 @@ namespace ThrustCompiler {
 		}
 
 		return Status::OK;
+	}
+
+	static Token getToken(String tokenString) {
+		charp tokenChar = tokenString[0];
+
+		if (tokenString == strVal("var")) {
+			return Token::TVAR;
+		}
+		else if (tokenString == strVal("print")) {
+			return Token::TPRINT;
+		}
+		else if (tokenString == strVal("=")) {
+			return Token::TASSIGN;
+		}
+		else if (std::isalpha(tokenChar) || tokenChar == charVal('_')) {
+			return Token::TIDENTIFIER;
+		}
+		else if (std::isdigit(tokenChar)) {
+			return Token::TF64VAL;
+		}
+		else {
+			throw std::exception("invalid token");
+		}
+	}
+
+	ptr<NumberST> parseNumberExpression() {
+		ptr<NumberST> numberExpression = std::make_unique<NumberST>(value);
+		return numberExpression;
 	}
 }

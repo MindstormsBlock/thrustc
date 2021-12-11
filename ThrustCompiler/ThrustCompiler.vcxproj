@@ -152,26 +152,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="app.h" />
-    <ClInclude Include="parser.h" />
-    <ClInclude Include="preprocessor.h" />
-    <ClInclude Include="SyntaxTree.h" />
-    <ClInclude Include="Token.h" />
     <ClInclude Include="type.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="parser.cpp" />
     <ClCompile Include="parser.ixx" />
-    <ClCompile Include="preprocessor.cpp" />
     <ClCompile Include="preprocessor.ixx" />
     <ClCompile Include="Status.ixx" />
-    <ClCompile Include="SyntaxTree.cpp" />
     <ClCompile Include="SyntaxTree.ixx" />
     <ClCompile Include="Token.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="improper.thrust" />
-    <None Include="main.thrust" />
+    <None Include="tests\improper.thrust" />
+    <None Include="tests\main.thrust" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

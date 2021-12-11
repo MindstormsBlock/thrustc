@@ -5,3 +5,5 @@
 #pragma once
 
 #include "type.h"
+
+import Status;
