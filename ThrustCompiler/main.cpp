@@ -6,31 +6,56 @@
 
 #include "app.h"
 
+import Status;
 import tokenizer;
 import parser;
 
-MAINRET MAIN(ARGC* argc, ARGV** argv) {
+namespace ThrustCompiler {
+	struct Setup {
+		const charp* filePath;
+	} setup;
 
-	[[unlikely]]
-	if ((intp)argc < 2) {
-		sout << (intp)argc << std::endl;
-		serr << strVal("Not enough arguments; filepath missing") << std::endl;
-		return (intp)ThrustCompiler::Status::ERROR_NO_FILEPATH;
+	Status parseArgs(intp* argc, charp** argv) {
+
+		[[unlikely]]
+		if ((intp)argc < 2) {
+			serr << strVal("Not enough arguments; filepath missing") << std::endl;
+			return Status::ERROR_NO_FILEPATH;
+		}
+
+		setup.filePath = argv[1];
+		
+		return Status::OK;
 	}
 
-	const charp* filePath = argv[1];
+	void printTokenMap() {
+		for (auto& [k, v] : tokenMap) {
+			sout << k << strVal(", ") << v << std::endl;
+		}
+	}
+}
 
-	ThrustCompiler::Status status = ThrustCompiler::tokenize(filePath);
+using ThrustCompiler::Status;
+using ThrustCompiler::parseArgs;
+using ThrustCompiler::tokenize;
+using ThrustCompiler::setup;
+using ThrustCompiler::printTokenMap;
 
-	if (status != ThrustCompiler::Status::OK) {
+MAINRET MAIN(ARGC* argc, ARGV** argv) {
+
+	Status status = parseArgs((intp*)argc, argv);
+
+	if (status != Status::OK) {
 		return (intp)status;
 	}
 
-	using ThrustCompiler::tokenMap;
+	status = tokenize(setup.filePath);
 
-	for (auto& [k, v] : tokenMap) {
-		sout << k << strVal(", ") << v << std::endl;
+	if (status != Status::OK) {
+		return (intp)status;
 	}
 
-	return (intp)ThrustCompiler::Status::OK;
+	printTokenMap();
+
+	return (intp)Status::OK;
 }

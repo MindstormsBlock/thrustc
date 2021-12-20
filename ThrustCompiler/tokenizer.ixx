@@ -5,9 +5,12 @@
 
 #include "app.h"
 
+#include <optional>
+
 export module tokenizer;
 
 import Token;
+import Status;
 import Value;
 
 //Container types
@@ -22,46 +25,72 @@ namespace ThrustCompiler {
 	export TokenMap tokenMap;
 
 	/// <summary>
-	/// Generates a (token, value) pair for an input string, for examle '+' generates (<code>Token::OPERATOR, Value::PLUS</code>) - NYI
+	/// Generates a token for the token string, for examle '+' generates <code>Token::OPERATOR</code>
 	/// </summary>
 	/// 
-	/// <param name="tokenString"></param>
+	/// <param name="tokenString">The token string to generate a token for</param>
 	/// <returns>The (token, value) pair</returns>
-	static Token getToken(const String& tokenString);
+	static Token getToken(const String& tokenString) noexcept;
 
 	/// <summary>
-	/// Tokenizes an entire file, pushes a (token, value) pair into <code>tokenList</code>
+	/// Gets a token string from a file stream
 	/// </summary>
 	/// 
-	/// <param name="filePath">Filepath to the file</param>
+	/// <param name="fileStream">File stream to read from</param>
+	/// <returns>An optional containing the token string if a read was succesful, otherwise is empty</returns>
+	static std::optional<String> readFile(IFStream& fileStream) noexcept;
+
+	/// <summary>
+	/// Tokenizes an entire file, pushes a (token, value) pair into <code>tokenMap</code>
+	/// </summary>
+	/// 
+	/// <param name="filePath">File Path to the file</param>
 	/// <returns>A status code</returns>
 	export Status tokenize(const charp* filePath) noexcept {
-		try {
-			IFStream fileStream(filePath);
-			fileStream.exceptions(IFStream::failbit | IFStream::badbit);
+		IFStream fileStream(filePath);
+		fileStream.exceptions(IFStream::failbit | IFStream::badbit);
 
-			while (fileStream.good()) {
-				String tokenString;
-				fileStream >> tokenString;
+		std::optional<String> opt = readFile(fileStream);
+		String tokenString = opt.value();
 
-				Value v(strVal("nice 69"));
-
-				tokenMap.emplace(getToken(std::move(tokenString)), v);
-			}
+		if (!opt.has_value()) {
+			return Status::ERROR_BAD_FILE;
 		}
-		catch (std::exception e) {
-			sout << "Error while tokenizing: " << e.what() << std::endl;
+
+		Value v(strVal("nice 69"));
+
+		Token token = getToken(std::move(tokenString));
+
+		if (token == Token::TNONE) {
+			sout << strVal("Invalid token while parsing: ") << std::endl;
 			return Status::ERROR_TOKENIZER;
 		}
-		catch (...) {
-			sout << "Unknown error while tokenizing" << std::endl;
-			return Status::ERROR_TOKENIZER;
-		}
+
+		tokenMap.emplace(token, v);
 
 		return Status::OK;
 	}
 
-	static Token getToken(const String& tokenString) {
+	static std::optional<String> readFile(IFStream& fileStream) noexcept {
+		try {
+			while (fileStream.good()) {
+				String tokenString;
+				fileStream >> tokenString;
+
+				return std::optional(tokenString);
+			}
+		}
+		catch (std::exception e) {
+			sout << strVal("Error while tokenizing: ") << e.what() << std::endl;
+			return std::nullopt;
+		}
+		catch (...) {
+			sout << strVal("Unknown error while tokenizing") << std::endl;
+			return std::nullopt;
+		}
+	}
+
+	static Token getToken(const String& tokenString) noexcept {
 		charp tokenChar = tokenString[0];
 
 		if (tokenString == strVal("var")) {
@@ -80,7 +109,7 @@ namespace ThrustCompiler {
 			return Token::TF64VAL;
 		}
 		else {
-			throw std::exception("invalid token");
+			return Token::TNONE;
 		}
 	}
 }

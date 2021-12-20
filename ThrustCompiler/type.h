@@ -140,6 +140,20 @@ using IFStream = std::ifstream;
 
 #pragma endregion
 
+//Definitions for new lines
+#pragma region lineBreaks
+
+#ifdef _WIN32
+#define newLine strVal("\r\n")
+#elif defined(__APPLE__)
+#define newLine strVal("\r")
+#else
+#define newLine strVal("\n")
+#endif
+
+#pragma endregion
+
+
 //Smart pointer types
 #pragma region smartPointerTypes
 
