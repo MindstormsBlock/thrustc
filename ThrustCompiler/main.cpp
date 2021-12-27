@@ -29,7 +29,7 @@ namespace ThrustCompiler {
 	}
 
 	void printTokenMap() {
-		for (auto& [k, v] : tokenMap) {
+		for (auto& [k, v] : tokenPairVector) {
 			sout << k << strVal(", ") << v << std::endl;
 		}
 	}

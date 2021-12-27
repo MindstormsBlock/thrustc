@@ -19,7 +19,7 @@ namespace ThrustCompiler {
 
 		TF64VAL
 	};
-
+	
 	export OStream& operator<<(OStream& os, const Token token) {
 		String s;
 

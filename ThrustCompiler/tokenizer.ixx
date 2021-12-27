@@ -16,69 +16,118 @@ import Value;
 //Container types
 #pragma region containerTypes
 
-using TokenMap = std::map<const ThrustCompiler::Token, ThrustCompiler::Value>;
+using ThrustCompiler::Token;
+
+using TokenPairVector = std::vector<std::pair<Token, String>>;
 
 #pragma endregion
 
 namespace ThrustCompiler {
 
-	export TokenMap tokenMap;
+	export TokenPairVector tokenPairVector;
 
 	/// <summary>
-	/// Generates a token for the token string, for examle '+' generates <code>Token::OPERATOR</code>
+	/// Generates a token for the token string, for example '+' generates <code>Token::TOPERATOR</code>
 	/// </summary>
 	/// 
 	/// <param name="tokenString">The token string to generate a token for</param>
-	/// <returns>The (token, value) pair</returns>
+	/// <returns>The token from the string</returns>
 	static Token getToken(const String& tokenString) noexcept;
 
 	/// <summary>
-	/// Gets a token string from a file stream
+	/// Gets 1 token string from a file stream
 	/// </summary>
 	/// 
 	/// <param name="fileStream">File stream to read from</param>
 	/// <returns>An optional containing the token string if a read was succesful, otherwise is empty</returns>
-	static std::optional<String> readFile(IFStream& fileStream) noexcept;
+	static std::optional<String> getTokenString(IFStream& fileStream) noexcept;
 
 	/// <summary>
-	/// Tokenizes an entire file, pushes a (token, value) pair into <code>tokenMap</code>
+	/// Generates a (token, token string) pair in the tokenValuePair parameter
 	/// </summary>
 	/// 
-	/// <param name="filePath">File Path to the file</param>
+	/// <param name="fileStream">File stream to read from</param>
+	/// <param name="tokenValuePair">Pair to insetr values to</param>
+	/// <returns>A status code</returns>
+	static Status getTokenValuePair(IFStream& fileStream, std::pair<Token, String>& tokenValuePair) noexcept;
+
+	/// <summary>
+	/// Pushes back a (token, token string) pair into tokenPairVector
+	/// </summary>
+	/// 
+	/// <param name="fileStream">File stream to read from</param>
+	/// <returns>A status code</returns>
+	static Status pushBackTokenPair(IFStream& fileStream) noexcept;
+
+	/// <summary>
+	/// Tokenizes an entire file
+	/// 
+	/// After execution, tokenPairVector vector contains (token, token string) pairs
+	/// </summary>
+	/// 
+	/// <param name="filePath">File path to the file</param>
 	/// <returns>A status code</returns>
 	export Status tokenize(const charp* filePath) noexcept {
-		IFStream fileStream(filePath);
-		fileStream.exceptions(IFStream::failbit | IFStream::badbit);
+		try {
+			IFStream fileStream(filePath);
+			fileStream.exceptions(IFStream::failbit | IFStream::badbit);
 
-		std::optional<String> opt = readFile(fileStream);
-		String tokenString = opt.value();
+			while (fileStream.good()) {
+				Status status = pushBackTokenPair(fileStream);
 
-		if (!opt.has_value()) {
+				if (status != Status::OK) {
+					return status;
+				}
+			}
+		}
+		catch (std::exception e) {
+			sout << strVal("Error while tokenizing: ") << e.what() << std::endl;
 			return Status::ERROR_BAD_FILE;
 		}
-
-		Value v(strVal("nice 69"));
-
-		Token token = getToken(std::move(tokenString));
-
-		if (token == Token::TNONE) {
-			sout << strVal("Invalid token while parsing: ") << std::endl;
-			return Status::ERROR_TOKENIZER;
-		}
-
-		tokenMap.emplace(token, v);
 
 		return Status::OK;
 	}
 
-	static std::optional<String> readFile(IFStream& fileStream) noexcept {
-		try {
-			while (fileStream.good()) {
-				String tokenString;
-				fileStream >> tokenString;
+	static Status pushBackTokenPair(IFStream& fileStream) noexcept {
+		std::pair<Token, String> tokenValuePair;
 
-				return std::optional(tokenString);
-			}
+		Status status = getTokenValuePair(fileStream, tokenValuePair);
+		if (status != Status::OK) {
+			return status;
+		}
+
+		tokenPairVector.push_back(std::move(tokenValuePair));
+
+		return Status::OK;
+	}
+
+	static Status getTokenValuePair(IFStream& fileStream, std::pair<Token, String>& tokenValuePair) noexcept {
+		std::optional<String> optionalTokenString = getTokenString(fileStream);
+		if (!optionalTokenString.has_value()) {
+			return Status::ERROR_BAD_FILE;
+		}
+
+		String tokenString = optionalTokenString.value();
+		String tokenStringCopy = tokenString;
+
+		Token token = getToken(std::move(tokenString));
+
+		if (token == Token::TNONE) {
+			sout << strVal("Invalid token while parsing: ") << tokenStringCopy << std::endl;
+			return Status::ERROR_TOKENIZER;
+		}
+
+		tokenValuePair = std::make_pair(token, std::move(tokenStringCopy));
+
+		return Status::OK;
+	}
+
+	static std::optional<String> getTokenString(IFStream& fileStream) noexcept {
+		try {
+			String tokenString;
+			fileStream >> tokenString;
+
+			return std::optional(tokenString);
 		}
 		catch (std::exception e) {
 			sout << strVal("Error while tokenizing: ") << e.what() << std::endl;

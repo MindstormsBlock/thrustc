@@ -9,6 +9,8 @@
 
 #ifdef USE_STL_MODULES
 import <string>;
+import <ctype.h>;
+import <locale>;
 
 import <vector>;
 import <map>;
@@ -19,6 +21,8 @@ import <fstream>;
 import <memory>;
 #else
 #include <string>
+#include <ctype.h>
+#include <locale>
 
 #include <vector>
 #include <map>
@@ -93,6 +97,7 @@ using String16 = std::wstring;
 
 //Gets the preffered UTF type based on platform
 #pragma region unicodeTypes
+//bool isAlpha(String s);
 
 #ifdef _UNICODE
 //Basic types, for character and byte manipulation
@@ -102,6 +107,9 @@ using String = String16;
 using IFStream = std::wifstream;
 using OStream = std::wostream;
 
+/*bool isAlpha(String s) {
+	return std::isalpha(s);
+}*/
 //Main and character definitions
 //Definitions used by main, and ONLY in main
 #ifdef _WIN32
@@ -123,8 +131,13 @@ using OStream = std::wostream;
 //Basic types, for character and byte manipulation
 using charp = char8;
 using String = String8;
-using IFStream = std::ifstream;
 
+using IFStream = std::ifstream;
+using OStream = std::ostream;
+
+bool isAlpha(String s) {
+	return std::isalpha;
+}
 //Main and character definitions
 //Definitions used by main, and ONLY in main
 #define MAIN main
