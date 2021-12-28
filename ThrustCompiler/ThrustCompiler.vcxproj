@@ -159,9 +159,11 @@
     <ClInclude Include="type.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="conversion.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="parser.ixx" />
     <ClCompile Include="preprocessor.ixx" />
+    <ClCompile Include="Setup.ixx" />
     <ClCompile Include="Status.ixx" />
     <ClCompile Include="SyntaxTree.ixx" />
     <ClCompile Include="Token.ixx" />
@@ -171,6 +173,7 @@
   <ItemGroup>
     <None Include="tests\improper.thrust" />
     <None Include="tests\main.thrust" />
+    <None Include="tests\test.out" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

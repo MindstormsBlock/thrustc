@@ -11,7 +11,11 @@ export module tokenizer;
 
 import Token;
 import Status;
+import Setup;
+
 import Value;
+
+import conversion;
 
 //Container types
 #pragma region containerTypes
@@ -70,6 +74,7 @@ namespace ThrustCompiler {
 	export Status tokenize(const charp* filePath) noexcept {
 		try {
 			IFStream fileStream(filePath);
+			fileStream.imbue(setup.UTF8Locale);
 			fileStream.exceptions(IFStream::failbit | IFStream::badbit);
 
 			while (fileStream.good()) {
@@ -140,7 +145,7 @@ namespace ThrustCompiler {
 	}
 
 	static Token getToken(const String& tokenString) noexcept {
-		charp tokenChar = tokenString[0];
+		const charp& tokenChar = tokenString[0];
 
 		if (tokenString == strVal("var")) {
 			return Token::TVAR;
@@ -151,7 +156,7 @@ namespace ThrustCompiler {
 		else if (tokenString == strVal("=")) {
 			return Token::TASSIGN;
 		}
-		else if (std::isalpha(tokenChar) || tokenChar == charVal('_')) {
+		else if (isAlpha(tokenChar) || tokenChar == charVal('_')) {
 			return Token::TIDENTIFIER;
 		}
 		else if (std::isdigit(tokenChar)) {

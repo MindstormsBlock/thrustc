@@ -19,18 +19,18 @@ namespace ThrustCompiler {
 
 	export class VariableST : public ExpressionST {
 	public:
-		VariableST(const String16& name) : name(name) {}
+		VariableST(const String& name) : name(name) {}
 
 	private:
-		String16 name;
+		String name;
 	};
 
 	export class BinaryExpressionST : public ExpressionST {
 	public:
-		BinaryExpressionST(char16 op, ptr<ExpressionST> LHS, ExpressionST* RHS) : op(op), LHS(std::move(LHS)), RHS(std::move(RHS)) {}
+		BinaryExpressionST(charp op, ptr<ExpressionST> LHS, ExpressionST* RHS) : op(op), LHS(std::move(LHS)), RHS(std::move(RHS)) {}
 
 	private:
-		char16 op;
+		charp op;
 
 		ptr<ExpressionST> LHS;
 		ptr<ExpressionST> RHS;
@@ -38,25 +38,25 @@ namespace ThrustCompiler {
 
 	export class CallExpressionST : public ExpressionST {
 	public:
-		CallExpressionST(const String16& callee, std::vector<ptr<ExpressionST>>&& argumentList)
+		CallExpressionST(const String& callee, std::vector<ptr<ExpressionST>>&& argumentList)
 			: callee(callee), argumentList(std::move(argumentList)) {}
 
 	private:
-		String16 callee;
+		String callee;
 		std::vector<ptr<ExpressionST>> argumentList;
 	};
 
 	export class FunctionPrototypeST {
 	public:
-		FunctionPrototypeST(const String16& name, std::vector<String16>&& argumentNames)
+		FunctionPrototypeST(const String& name, std::vector<String>&& argumentNames)
 			: name(name), argumentNames(std::move(argumentNames)) {}
 
-		const String16& getName() {
+		const String& getName() {
 			return name;
 		}
 	private:
-		String16 name;
-		std::vector<String16> argumentNames;
+		String name;
+		std::vector<String> argumentNames;
 	};
 
 	export class FunctionST {

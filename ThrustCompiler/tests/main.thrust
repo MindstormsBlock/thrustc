@@ -16,5 +16,5 @@ class Test {
 
 int32 main(int count, char* value) {
 	Test test = new Test();
-	ptr mem = salloc(5);
+	int8[] ptr mem = halloc(5);
 }

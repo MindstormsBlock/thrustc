@@ -47,12 +47,21 @@
     <ClCompile Include="Value.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="conversion.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Setup.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tests\improper.thrust">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="tests\main.thrust">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="tests\test.out">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

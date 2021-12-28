@@ -9,8 +9,6 @@
 
 #ifdef USE_STL_MODULES
 import <string>;
-import <ctype.h>;
-import <locale>;
 
 import <vector>;
 import <map>;
@@ -21,8 +19,6 @@ import <fstream>;
 import <memory>;
 #else
 #include <string>
-#include <ctype.h>
-#include <locale>
 
 #include <vector>
 #include <map>
@@ -79,12 +75,12 @@ using sizep = uint32;
 #endif
 
 //Character types
-using char16 = wchar_t;
-using char8 = char;
+using wchar = wchar_t;
+using nchar = char;
 
 //String types
-using String8 = std::string;
-using String16 = std::wstring;
+using NString = std::string;
+using WString = std::wstring;
 
 //Types for main
 //Definitions used by main, and ONLY in main
@@ -95,49 +91,47 @@ using String16 = std::wstring;
 
 #pragma endregion
 
-//Gets the preffered UTF type based on platform
+//Gets the preffered char/string type based on platform
 #pragma region unicodeTypes
-//bool isAlpha(String s);
 
-#ifdef _UNICODE
+#undef _WIN32
+
+#ifdef _WIN32
 //Basic types, for character and byte manipulation
-using charp = char16;
-using String = String16;
+using charp = wchar;
+using String = WString;
 
 using IFStream = std::wifstream;
+using OFStream = std::wofstream;
 using OStream = std::wostream;
 
-/*bool isAlpha(String s) {
-	return std::isalpha(s);
-}*/
+inline OStream& sout = std::wcout;
+inline OStream& serr = std::wcerr;
+
 //Main and character definitions
 //Definitions used by main, and ONLY in main
-#ifdef _WIN32
 #define MAIN wmain
 #define ARGV wchar_t
-#else
-#define MAIN main
-#define ARGV char
-#endif
 
 //Definitions for string literal creation and logging
 //DO NOT USE PLAIN STRING/CHAR LITERALS
 //DO NOT USE PLAIN LOGGING
 #define strVal(x) L## x // - not limited to string, however separating str and char makes debugging easier
 #define charVal(x) L## x
-#define sout std::wcout
-#define serr std::wcerr
+//#define sout std::wcout
+//#define serr std::wcerr
 #else
 //Basic types, for character and byte manipulation
-using charp = char8;
-using String = String8;
+using charp = nchar;
+using String = NString;
 
 using IFStream = std::ifstream;
+using OFStream = std::ofstream;
 using OStream = std::ostream;
 
-bool isAlpha(String s) {
-	return std::isalpha;
-}
+inline OStream& sout = std::cout;
+inline OStream& serr = std::cerr;
+
 //Main and character definitions
 //Definitions used by main, and ONLY in main
 #define MAIN main
@@ -147,8 +141,8 @@ bool isAlpha(String s) {
 //DO NOT USE PLAIN STRING/CHAR LITERALS
 #define strVal(x) x //not limited to string, however separating str and char makes debugging easier
 #define charVal(x) x
-#define sout std::cout
-#define serr std::cerr
+//#define sout std::cout
+//#define serr std::cerr
 #endif
 
 #pragma endregion
@@ -165,7 +159,6 @@ bool isAlpha(String s) {
 #endif
 
 #pragma endregion
-
 
 //Smart pointer types
 #pragma region smartPointerTypes
