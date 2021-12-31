@@ -19,6 +19,9 @@ namespace ThrustCompiler {
 		OK = 0, ERROR_NO_FILEPATH, ERROR_BAD_FILE, ERROR_TOKENIZER, ERROR_PREPROCESSOR
 	};
 
+	/// <summary>
+	/// Cast a Status code to intp
+	/// </summary>
 	export intp operator!(Status status) {
 		return (intp)status;
 	}

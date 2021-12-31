@@ -47,7 +47,7 @@
     <ClCompile Include="Value.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="conversion.ixx">
+    <ClCompile Include="string.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Setup.ixx">

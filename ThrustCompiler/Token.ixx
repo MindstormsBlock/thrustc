@@ -13,6 +13,9 @@ namespace ThrustCompiler {
 
 		TPRINT,
 
+		TLPAREN,
+		TRPAREN,
+		TCOMMA,
 		TASSIGN,
 
 		TIDENTIFIER,
@@ -33,6 +36,15 @@ namespace ThrustCompiler {
 		case Token::TPRINT:
 			s = strVal("TPRINT");
 			break;
+		case Token::TLPAREN:
+			s = strVal("TLPAREN");
+			break;
+		case Token::TRPAREN:
+			s = strVal("TRPAREN");
+			break;
+		case Token::TCOMMA:
+			s = strVal("TCOMMA");
+			break;
 		case Token::TASSIGN:
 			s = strVal("TASSIGN");
 			break;
@@ -41,6 +53,9 @@ namespace ThrustCompiler {
 			break;
 		case Token::TF64VAL:
 			s = strVal("TF64VAL");
+			break;
+		default:
+			s = strVal("Uknown token");
 			break;
 		}
 

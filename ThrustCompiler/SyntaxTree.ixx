@@ -1,5 +1,7 @@
 #include "app.h"
 
+#include <vector>
+
 export module SyntaxTree;
 
 namespace ThrustCompiler {

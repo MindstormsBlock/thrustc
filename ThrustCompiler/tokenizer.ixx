@@ -5,6 +5,8 @@
 
 #include "app.h"
 
+#include <vector>
+
 #include <optional>
 
 export module tokenizer;
@@ -13,22 +15,30 @@ import Token;
 import Status;
 import Setup;
 
-import Value;
-
-import conversion;
+import string;
 
 //Container types
 #pragma region containerTypes
 
 using ThrustCompiler::Token;
 
-using TokenPairVector = std::vector<std::pair<Token, String>>;
+using TokenPair = std::pair<Token, String>;
+
+using TokenPairVector = std::vector<TokenPair>;
 
 #pragma endregion
 
 namespace ThrustCompiler {
 
+	/// <summary>
+	/// Vector containing (token, token string) pairs
+	/// </summary>
 	export TokenPairVector tokenPairVector;
+
+	/// <summary>
+	/// Filestream functions use to read from source files
+	/// </summary>
+	static IFStream fileStream;
 
 	/// <summary>
 	/// Generates a token for the token string, for example '+' generates <code>Token::TOPERATOR</code>
@@ -42,26 +52,23 @@ namespace ThrustCompiler {
 	/// Gets 1 token string from a file stream
 	/// </summary>
 	/// 
-	/// <param name="fileStream">File stream to read from</param>
 	/// <returns>An optional containing the token string if a read was succesful, otherwise is empty</returns>
-	static std::optional<String> getTokenString(IFStream& fileStream) noexcept;
+	static const std::optional<String> getTokenString() noexcept;
 
 	/// <summary>
-	/// Generates a (token, token string) pair in the tokenValuePair parameter
+	/// Pushes 1 character
 	/// </summary>
-	/// 
-	/// <param name="fileStream">File stream to read from</param>
-	/// <param name="tokenValuePair">Pair to insetr values to</param>
-	/// <returns>A status code</returns>
-	static Status getTokenValuePair(IFStream& fileStream, std::pair<Token, String>& tokenValuePair) noexcept;
+	/// <param name="tokenString"></param>
+	/// <param name="token"></param>
+	/// <returns></returns>
+	static void pushBackMarkedCharTokenPair(const String& tokenString, const Token token) noexcept;
 
 	/// <summary>
-	/// Pushes back a (token, token string) pair into tokenPairVector
+	/// Generates a (token, token string) pair and emplaces it back into tokenPairVector
 	/// </summary>
 	/// 
-	/// <param name="fileStream">File stream to read from</param>
 	/// <returns>A status code</returns>
-	static Status pushBackTokenPair(IFStream& fileStream) noexcept;
+	static Status pushBackTokenPair() noexcept;
 
 	/// <summary>
 	/// Tokenizes an entire file
@@ -73,61 +80,73 @@ namespace ThrustCompiler {
 	/// <returns>A status code</returns>
 	export Status tokenize(const charp* filePath) noexcept {
 		try {
-			IFStream fileStream(filePath);
+			Status status;
+
+			fileStream = IFStream(filePath);
 			fileStream.imbue(setup.UTF8Locale);
 			fileStream.exceptions(IFStream::failbit | IFStream::badbit);
 
 			while (fileStream.good()) {
-				Status status = pushBackTokenPair(fileStream);
+				status = pushBackTokenPair();
 
 				if (status != Status::OK) {
 					return status;
 				}
 			}
+
+			return status;
 		}
 		catch (std::exception e) {
 			sout << strVal("Error while tokenizing: ") << e.what() << std::endl;
 			return Status::ERROR_BAD_FILE;
 		}
-
-		return Status::OK;
 	}
 
-	static Status pushBackTokenPair(IFStream& fileStream) noexcept {
-		std::pair<Token, String> tokenValuePair;
-
-		Status status = getTokenValuePair(fileStream, tokenValuePair);
-		if (status != Status::OK) {
-			return status;
-		}
-
-		tokenPairVector.push_back(std::move(tokenValuePair));
-
-		return Status::OK;
-	}
-
-	static Status getTokenValuePair(IFStream& fileStream, std::pair<Token, String>& tokenValuePair) noexcept {
-		std::optional<String> optionalTokenString = getTokenString(fileStream);
+	static Status pushBackTokenPair() noexcept {
+		const std::optional<String>& optionalTokenString = getTokenString();
 		if (!optionalTokenString.has_value()) {
 			return Status::ERROR_BAD_FILE;
 		}
 
 		String tokenString = optionalTokenString.value();
-		String tokenStringCopy = tokenString;
+		
+		if (tokenString[0] == charVal('(')) {
+			tokenString.erase(0, 1);
+			const String value(1, charVal('('));
+			pushBackMarkedCharTokenPair(std::move(value), Token::TLPAREN);
+		}
 
-		Token token = getToken(std::move(tokenString));
+		const sizep lastI = tokenString.size() - 1;
+		if (tokenString[lastI] == charVal(')')) {
+			tokenString.erase(lastI);
+			const String value(1, charVal(')'));
+			pushBackMarkedCharTokenPair(std::move(value), Token::TRPAREN);
+		}
+		else if (tokenString[lastI] == charVal(',')) {
+			tokenString.erase(lastI);
+			const String value(1, charVal(','));
+			pushBackMarkedCharTokenPair(std::move(value), Token::TCOMMA);
+		}
+
+		const String tokenStringCopy = tokenString;
+
+		const Token token = getToken(std::move(tokenString));
 
 		if (token == Token::TNONE) {
 			sout << strVal("Invalid token while parsing: ") << tokenStringCopy << std::endl;
 			return Status::ERROR_TOKENIZER;
 		}
 
-		tokenValuePair = std::make_pair(token, std::move(tokenStringCopy));
+		tokenPairVector.emplace_back(token, std::move(tokenStringCopy));
 
 		return Status::OK;
 	}
 
-	static std::optional<String> getTokenString(IFStream& fileStream) noexcept {
+	static void pushBackMarkedCharTokenPair(const String& tokenString, const Token token) noexcept {
+		tokenPairVector.emplace_back(token, std::move(tokenString));
+	}
+
+	static const std::optional<String> getTokenString() noexcept {
 		try {
 			String tokenString;
 			fileStream >> tokenString;

@@ -10,18 +10,12 @@
 #ifdef USE_STL_MODULES
 import <string>;
 
-import <vector>;
-import <map>;
-
 import <iostream>;
 import <fstream>;
 
 import <memory>;
 #else
 #include <string>
-
-#include <vector>
-#include <map>
 
 #include <iostream>
 #include <fstream>
@@ -93,8 +87,6 @@ using WString = std::wstring;
 
 //Gets the preffered char/string type based on platform
 #pragma region unicodeTypes
-
-#undef _WIN32
 
 #ifdef _WIN32
 //Basic types, for character and byte manipulation

@@ -6,9 +6,6 @@
 
 #include "app.h"
 
-#include <io.h>
-#include <fcntl.h>
-
 import Status;
 import Setup;
 

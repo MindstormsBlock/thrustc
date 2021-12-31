@@ -159,7 +159,7 @@
     <ClInclude Include="type.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="conversion.ixx" />
+    <ClCompile Include="string.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="parser.ixx" />
     <ClCompile Include="preprocessor.ixx" />
